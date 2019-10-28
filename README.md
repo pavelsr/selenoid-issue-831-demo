@@ -1,0 +1,1 @@
+Demo of `<selenoid_FQDN> does not respond in 30s` error

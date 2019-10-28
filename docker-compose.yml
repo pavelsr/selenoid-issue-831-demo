@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+    testapp:
+        build: .
+        environment:
+        - TZ=Europe/Moscow
+        depends_on:
+            - selenoid
+        volumes:
+        - ${PWD}/test.pl:/test.pl
+        command: perl /test.pl
+
+    selenoid:
+        image: aerokube/selenoid:latest-release
+        volumes:
+          - "${PWD}/browsers.json:/etc/selenoid/browsers.json"
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        command: ["-conf", "/etc/selenoid/browsers.json", "-log-output-dir", "/opt/selenoid/logs"]
+        expose:
+        - "4444"
+
+    selenoid-ui:
+        image: aerokube/selenoid-ui
+        command: --selenoid-uri http://selenoid:4444
+        expose:
+        - "8080"
